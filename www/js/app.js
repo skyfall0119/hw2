@@ -43,7 +43,6 @@ var starter = angular.module('starter', ['ionic', 'ngCordova'])
     if (ionic.Platform.isAndroid()) {  //need to do different init for Android and iOS..  So much for cross-platform!
       // Works on android but not in iOS
       $rootScope.db = $cordovaSQLite.openDB({ name: "my.db", iosDatabaseLocation:'default'});
-      $cordovaSQLite.execute($rootScope.db, "DROP TABLE Guests");  //Delete the tables!
       checkTableExistance($rootScope.db)  //Check and remake the tables
     } else {
       // Works on iOS - pretty much the same as above.
@@ -56,7 +55,7 @@ var starter = angular.module('starter', ['ionic', 'ngCordova'])
 
 // The start of the single controller that we will be using for this lab
 // It is called "mainCtrl" and is connected to the Angular module "starter"
-starter.controller('mainCtrl', function($rootScope, $scope, $ionicModal, $ionicLoading, $cordovaSQLite) {
+starter.controller('mainCtrl', function($ionicPlatform, $rootScope, $scope, $ionicModal, $ionicLoading, $cordovaSQLite) {
 
   $scope.firstName = ""; // Create first name string variable on controller $scope
   $scope.lastName = ""; // Create last name string variable on controller $scope
@@ -67,26 +66,31 @@ starter.controller('mainCtrl', function($rootScope, $scope, $ionicModal, $ionicL
 
 
   // pull date from db. update the listOfPeople when the app starts
-  var query = "SELECT * FROM Guests";
-  $cordovaSQLite.execute($rootScope.db, query).then(function(res) {
+  $ionicPlatform.ready(function() {
+    var query = "SELECT * FROM Guests";
+    $cordovaSQLite.execute($rootScope.db, query).then(function (res) {
 
-    if (res != null) {
-      var person = {id: "init", firstName: "init", lastName: "init", phoneNumber: "0", email: "init"};
-      for (var i = 0; i < res.rows.length; i++) { //go through all the rows
-        person.id = res.rows.item(i)[0];
-        person.firstName = res.rows.item(i)[1];
-        person.lastName = res.rows.item(i)[2];
-        person.phoneNumber = res.rows.item(i)[3];
-        person.email = res.rows.item(i)[4];
 
-        $scope.listOfPeople[person.id] = person;
+
+      if (res != null) {
+
+        for (var i = 0; i < res.rows.length; i++) { //go through all the rows
+          var person = {id: "init", firstName: "init", lastName: "init", phoneNumber: "0", email: "init"};
+          person.id = res.rows.item(i).id;
+          person.firstName = res.rows.item(i).firstName;
+          person.lastName = res.rows.item(i).lastName;
+          person.phoneNumber = res.rows.item(i).phoneNumber;
+          person.email = res.rows.item(i).email;
+
+          $scope.listOfPeople[person.id] = person;
+        }
       }
-    }
-    //above line updates listOfItems so we can display it in ng-repeat.
-  }, function (err) {
-    //do this if there is an error!
-    $scope.debug = err.message;
-  });
+      //above line updates listOfItems so we can display it in ng-repeat.
+    }, function (err) {
+      //do this if there is an error!
+      $scope.debug = err.message;
+    });
+  })
 
 
 
@@ -133,9 +137,8 @@ starter.controller('mainCtrl', function($rootScope, $scope, $ionicModal, $ionicL
     /* Insert your code to delete a person variable from the dictionary "listOfPeople" */
     delete $scope.listOfPeople[person.id];
 
-
     var deleteQuery =  "DELETE FROM Guests WHERE id=?";
-    $cordovaSQLite.execute(db,deleteQuery,[person.id]);
+    $cordovaSQLite.execute($rootScope.db,deleteQuery,[person.id]);
 
     // This function call displays a popover that says "Person Deleted!"
     // It is run every time someone clicks/presses a person in the list of people and the deletePerson

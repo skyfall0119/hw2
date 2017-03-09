@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="starter">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -25,51 +25,73 @@
     <script src="js/app.js"></script>
 
   </head>
-  <body ng-app="starter" ng-controller="mainCtrl" class="platform-ios platform-cordova platform-webview">
+  <body ng-controller="mainCtrl">
     <ion-pane>
       <ion-header-bar class="bar-stable">
-        <h1 class="title">GuestBook</h1>
+        <h1 class="title">GuestBook</h1> <!-- The title bar has a title of "GuestBook" and uses an "h1" HTML tag -->
       </ion-header-bar>
       <ion-content>
         <!-- First and Last name top block -->
+        <!-- As you can see here, there are two text boxes, each 50% in screen width -->
+        <!-- The left one is the first name, and the right one is the last name -->
+
+        <!-- First Name START -->
         <div class="bottom">
           <div style="float: left; width: 50%;">
             <label class="item item-input">
-              <!-- <span class="input-label">First Name</span> -->
-              <input type="text" name="firstName" id="firstName-textarea"
-                      ng-model="$parent.firstName" placeholder="First Name">
+              <input type="text" name="firstName" id="firstName-textarea" ng-model="$parent.firstName" placeholder="First Name">
             </label>
           </div>
+          <!-- First Name END -->
+
+          <!-- Last Name START -->
           <div style="float: left; width: 50%;">
             <label class="item item-input">
-              <!-- <span class="input-label">Last Name</span> -->
-              <input type="text" name="lastName" id="lastName-textarea"
-                     ng-model="$parent.lastName" placeholder="Last Name">
+              <input type="text" name="lastName" id="lastName-textarea" ng-model="$parent.lastName" placeholder="Last Name">
             </label>
           </div>
         </div>
+        <!-- Last Name END -->
+
         <!---------- END ---------->
+        <!-- TODO: HTML Task 1: Add two more text boxes, each 100% width, that allow entry of email and phone number -->
+        <!-- Use the two text boxes above as templates in your creation of the two new ones -->
+        <!-- HINT: Bind the phone number text box to "$parent.phoneNumber" and the emai text box to "$parent.email" -->
+
         <div class="bottom">
+          <!-- phoneNumber; YOUR CODE HERE -->
           <div style="float: left; width: 100%;">
             <label class="item item-input">
-              <!-- <span class="input-label">Phone Number</span> -->
-              <input type="text" name="lastName" id="phoneNumber-textarea"
-                     ng-model="$parent.phoneNumber" placeholder="Phone Number">
+              <input type="text" name="phoneNumber" id="phoneNumber-textarea" ng-model="$parent.phoneNumber" placeholder="Phone Number">
             </label>
           </div>
         </div>
+
         <div class="bottom">
+          <!-- email; YOUR CODE HERE -->
           <div style="float: left; width: 100%;">
             <label class="item item-input">
-              <!-- <span class="input-label">Phone Number</span> -->
-              <input type="text" name="email" id="email-textarea"
-                   ng-model="$parent.email" placeholder="Email">
+              <input type="text" name="email" id="email-textarea" ng-model="$parent.email" placeholder="Email">
             </label>
           </div>
         </div>
+
+        <!-- What the line below does is create a button that is the width of the screen that upon click/tap
+              (notice: ng-click directive) the function "onSubmit" (which takes no parameters) is run inside the
+              controller "mainCtrl" -->
+        <!-- The button has the text "Submit" and classes of "button" and "button-full"
+              https://www.tutorialspoint.com/ionic/ionic_buttons.htm for more information -->
         <button class="button button-full" ng-click="onSubmit()">Submit</button>
         <ul>
-          <!-- <li class="button button-full" ng-repeat="person in listOfPeople"><a href="#">First Name: {{person.firstName}}</a></li> -->
+
+        <!-- Below is a very important block: it is a list of the people that are added to the array by the "onSubmit"
+             function. Notice 2 important directives: "ng-repeat" and "ng-click". As mentioned before, "ng-click" runs a
+             function on click or on tap (mobile devices). "ng-repeat" is used to repeat a HTML element and define its
+             content based on what the "ng-repeat" directive is bound to. -->
+          <!-- TODO: HTML Task 2: Fill in the blank for the "ng-repeat" and "ng-click" directives -->
+          <!-- HINT: ng-click will call a function in the controller "mainCtrl" (there are only two) AND will pass a
+                     variable to that function and ng-repeat will be bound to "listOfPeople".
+                     Syntax for ng-repeat: http://www.w3schools.com/angular/ng_ng-repeat.asp -->
           <li class="button button-full" ng-repeat="person in listOfPeople" ng-click="deletePerson(person)">
             Name: {{person.firstName}} {{person.lastName}} <br>Phone: {{person.phoneNumber}} <br>Email: {{person.email}}</li>
         </ul>
